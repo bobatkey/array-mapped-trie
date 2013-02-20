@@ -1,0 +1,12 @@
+OASISFormat: 0.3
+Name:        hashtree
+Version:     0.1
+Synopsis:    A hash tree data structure implementation
+Authors:     Robert Atkey <bob.atkey@gmail.com>
+License:     BSD3
+Plugins:     META (0.3)
+BuildTools:  ocamlbuild
+
+Library "hashtree"
+  Path:    lib
+  Modules: Hashtree

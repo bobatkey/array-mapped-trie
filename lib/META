@@ -1,0 +1,11 @@
+# OASIS_START
+# DO NOT EDIT (digest: 948cc4510fc9556f849abe46da703515)
+version = "0.1"
+description = "A hash tree data structure implementation"
+archive(byte) = "hashtree.cma"
+archive(byte, plugin) = "hashtree.cma"
+archive(native) = "hashtree.cmxa"
+archive(native, plugin) = "hashtree.cmxs"
+exists_if = "hashtree.cma"
+# OASIS_STOP
+
