@@ -6,7 +6,7 @@ val is_empty : 'a t -> bool
 
 val add : int -> 'a -> 'a t -> 'a t
 
-val find : int -> 'a t -> 'a option
+val find : int -> 'a t -> 'a
 
 val singleton : int -> 'a -> 'a t
 

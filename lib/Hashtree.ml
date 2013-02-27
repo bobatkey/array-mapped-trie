@@ -37,12 +37,12 @@ let find key (map,t) =
   let rec search skey map t =
     let bottom5 = skey land 0x1f in
     if map land (1 lsl bottom5) = 0 then
-      None
+      raise Not_found
     else
       let offset = ctpop (map land ((1 lsl bottom5) - 1)) in
       match Array.unsafe_get t offset with
-        | Value (key', v) when key = key' -> Some v
-        | Value (key', v) -> None
+        | Value (key', v) when key = key' -> v
+        | Value (key', v) -> raise Not_found
         | Subtree (map,t) -> search (skey lsr 5) map t
   in
   search key map t
