@@ -9,7 +9,7 @@ BuildTools:  ocamlbuild
 
 Library "hashtree"
   Path:    lib
-  Modules: Hashtree
+  Modules: Hashtree, Hashtree_packed
 
 Executable test
   Path: test
@@ -23,3 +23,10 @@ Test "hashtree"
   Command: $test
   WorkingDirectory: test
   TestTools: test
+
+Executable "benchmark-hashtree"
+  Path: benchmark
+  MainIs: main.ml
+  Install: false
+  CompiledObject: native
+  BuildDepends: hashtree, benchmark

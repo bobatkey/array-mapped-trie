@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 1cbc6f273a8e1341cbed2b25a6edf70a)
+# DO NOT EDIT (digest: 627682aa568660fb30e4046071312d48)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -20,4 +20,9 @@
 "test/test.byte": pkg_oUnit
 <test/*.ml{,i}>: use_hashtree
 <test/*.ml{,i}>: pkg_oUnit
+# Executable benchmark-hashtree
+"benchmark/main.native": use_hashtree
+"benchmark/main.native": pkg_benchmark
+<benchmark/*.ml{,i}>: use_hashtree
+<benchmark/*.ml{,i}>: pkg_benchmark
 # OASIS_STOP
