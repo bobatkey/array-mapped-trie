@@ -1,7 +1,7 @@
 type 'a t
 
-val empty : 'a t
+val create : unit -> 'a t
 
-val add : int -> 'a -> 'a t -> 'a t
+val add : int -> 'a -> 'a t -> unit
 
 val find : int -> 'a t -> 'a

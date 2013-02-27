@@ -44,9 +44,9 @@ let amt_inserts n =
 let amt_packed_inserts n =
   let rec loop tree i =
     if i = 0 then tree
-    else loop (ArrayMappedTrie_packed.add i () tree) (i-1)
+    else (ArrayMappedTrie_packed.add i () tree; loop tree (i-1))
   in
-  ignore (loop ArrayMappedTrie_packed.empty n)
+  ignore (loop (ArrayMappedTrie_packed.create ()) n)
 
 (******************************************************************************)
 let intmap_inserts_lookups n =
@@ -100,13 +100,13 @@ let amt_inserts_lookups n =
 let amt_packed_inserts_lookups n =
   let rec loop tree i =
     if i = 0 then tree
-    else loop (ArrayMappedTrie_packed.add i () tree) (i-1)
+    else (ArrayMappedTrie_packed.add i () tree; loop tree (i-1))
   in
   let rec loop2 tree i =
     if i = 0 then ()
     else let _ = ArrayMappedTrie_packed.find i tree in loop2 tree (i-1)
   in
-  loop2 (loop ArrayMappedTrie_packed.empty n) n
+  loop2 (loop (ArrayMappedTrie_packed.create ()) n) n
 
 
 (******************************************************************************)
