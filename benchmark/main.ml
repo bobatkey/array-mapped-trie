@@ -2,7 +2,7 @@ open Benchmark
 
 (* do a benchmark that inserts the numbers 1 to 100000 into
    - an IntMap
-   - a Hashtree
+   - a ArrayMappedTrie
    - a Hashtbl
 *)
 
@@ -34,19 +34,19 @@ let hashtbl2_inserts n =
   in
   loop n
 
-let hashtree_inserts n =
+let amt_inserts n =
   let rec loop tree i =
     if i = 0 then tree
-    else loop (Hashtree.add i () tree) (i-1)
+    else loop (ArrayMappedTrie.add i () tree) (i-1)
   in
-  ignore (loop Hashtree.empty n)
+  ignore (loop ArrayMappedTrie.empty n)
 
-let hashtree_packed_inserts n =
+let amt_packed_inserts n =
   let rec loop tree i =
     if i = 0 then tree
-    else loop (Hashtree_packed.add i () tree) (i-1)
+    else loop (ArrayMappedTrie_packed.add i () tree) (i-1)
   in
-  ignore (loop Hashtree_packed.empty n)
+  ignore (loop ArrayMappedTrie_packed.empty n)
 
 (******************************************************************************)
 let intmap_inserts_lookups n =
@@ -86,35 +86,35 @@ let hashtbl2_inserts_lookups n =
   in
   loop n; loop2 n
 
-let hashtree_inserts_lookups n =
+let amt_inserts_lookups n =
   let rec loop tree i =
     if i = 0 then tree
-    else loop (Hashtree.add i () tree) (i-1)
+    else loop (ArrayMappedTrie.add i () tree) (i-1)
   in
   let rec loop2 tree i =
     if i = 0 then ()
-    else let _ = Hashtree.find i tree in loop2 tree (i-1)
+    else let _ = ArrayMappedTrie.find i tree in loop2 tree (i-1)
   in
-  loop2 (loop Hashtree.empty n) n
+  loop2 (loop ArrayMappedTrie.empty n) n
 
-let hashtree_packed_inserts_lookups n =
+let amt_packed_inserts_lookups n =
   let rec loop tree i =
     if i = 0 then tree
-    else loop (Hashtree_packed.add i () tree) (i-1)
+    else loop (ArrayMappedTrie_packed.add i () tree) (i-1)
   in
   let rec loop2 tree i =
     if i = 0 then ()
-    else let _ = Hashtree_packed.find i tree in loop2 tree (i-1)
+    else let _ = ArrayMappedTrie_packed.find i tree in loop2 tree (i-1)
   in
-  loop2 (loop Hashtree_packed.empty n) n
+  loop2 (loop ArrayMappedTrie_packed.empty n) n
 
 
 (******************************************************************************)
 let benchmark1 () =
   let res =
     latencyN 500L
-      [ "hashtree", hashtree_inserts, 100000
-      ; "hashtree_packed", hashtree_packed_inserts, 100000
+      [ "arraymappedtrie", amt_inserts, 100000
+      ; "arraymappedtrie_packed", amt_packed_inserts, 100000
       ; "intmap",   intmap_inserts,   100000
       ; "hashtbl",  hashtbl_inserts,  100000
       ; "hashtbl2", hashtbl2_inserts, 100000
@@ -126,8 +126,8 @@ let benchmark1 () =
 let benchmark2 () =
   let res =
     latencyN 500L
-      [ "hashtree", hashtree_inserts_lookups, 100000
-      ; "hashtree_packed", hashtree_packed_inserts_lookups, 100000
+      [ "arraymappedtrie", amt_inserts_lookups, 100000
+      ; "arraymappedtrie_packed", amt_packed_inserts_lookups, 100000
       ; "intmap",   intmap_inserts_lookups,   100000
       ; "hashtbl",  hashtbl_inserts_lookups,  100000
       ; "hashtbl2", hashtbl2_inserts_lookups, 100000

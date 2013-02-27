@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 1136d1786d6e1c848da5492e3affb909) *)
+(* DO NOT EDIT (digest: 05f971e1295e7277a310b0b29c001f74) *)
 module OASISGettext = struct
 (* # 21 "/home/bob/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISGettext.ml" *)
 
@@ -477,7 +477,7 @@ end
 open Ocamlbuild_plugin;;
 let package_default =
   {
-     MyOCamlbuildBase.lib_ocaml = [("hashtree", ["lib"])];
+     MyOCamlbuildBase.lib_ocaml = [("array-mapped-trie", ["lib"])];
      lib_c = [];
      flags = [];
      includes = [("test", ["lib"]); ("benchmark", ["lib"])];

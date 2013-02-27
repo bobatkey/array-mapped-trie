@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 627682aa568660fb30e4046071312d48)
+# DO NOT EDIT (digest: 39b92b78e7df6649da7e42748e8599b8)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -13,16 +13,16 @@
 ".git": not_hygienic
 "_darcs": -traverse
 "_darcs": not_hygienic
-# Library hashtree
-"lib/hashtree.cmxs": use_hashtree
+# Library array-mapped-trie
+"lib/array-mapped-trie.cmxs": use_array-mapped-trie
 # Executable test
-"test/test.byte": use_hashtree
+"test/test.byte": use_array-mapped-trie
 "test/test.byte": pkg_oUnit
-<test/*.ml{,i}>: use_hashtree
+<test/*.ml{,i}>: use_array-mapped-trie
 <test/*.ml{,i}>: pkg_oUnit
-# Executable benchmark-hashtree
-"benchmark/main.native": use_hashtree
+# Executable benchmark-array-mapped-trie
+"benchmark/main.native": use_array-mapped-trie
 "benchmark/main.native": pkg_benchmark
-<benchmark/*.ml{,i}>: use_hashtree
+<benchmark/*.ml{,i}>: use_array-mapped-trie
 <benchmark/*.ml{,i}>: pkg_benchmark
 # OASIS_STOP

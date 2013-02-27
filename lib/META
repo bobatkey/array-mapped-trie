@@ -1,11 +1,11 @@
 # OASIS_START
-# DO NOT EDIT (digest: 948cc4510fc9556f849abe46da703515)
+# DO NOT EDIT (digest: da8f27a517d57898e7b07c6ca516e635)
 version = "0.1"
-description = "A hash tree data structure implementation"
-archive(byte) = "hashtree.cma"
-archive(byte, plugin) = "hashtree.cma"
-archive(native) = "hashtree.cmxa"
-archive(native, plugin) = "hashtree.cmxs"
-exists_if = "hashtree.cma"
+description = "An array mapped trie implementation"
+archive(byte) = "array-mapped-trie.cma"
+archive(byte, plugin) = "array-mapped-trie.cma"
+archive(native) = "array-mapped-trie.cmxa"
+archive(native, plugin) = "array-mapped-trie.cmxs"
+exists_if = "array-mapped-trie.cma"
 # OASIS_STOP
 

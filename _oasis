@@ -1,22 +1,22 @@
 OASISFormat: 0.3
-Name:        hashtree
+Name:        Array Mapped Trie
 Version:     0.1
-Synopsis:    A hash tree data structure implementation
+Synopsis:    An array mapped trie implementation
 Authors:     Robert Atkey <bob.atkey@gmail.com>
 License:     BSD3
 Plugins:     META (0.3)
 BuildTools:  ocamlbuild
 
-Library "hashtree"
+Library "array-mapped-trie"
   Path:    lib
-  Modules: Hashtree, Hashtree_packed
+  Modules: ArrayMappedTrie, ArrayMappedTrie_packed
 
 Executable test
   Path: test
   MainIs: test.ml
   Install: false
   CompiledObject: byte
-  BuildDepends: oUnit, hashtree
+  BuildDepends: oUnit, array-mapped-trie
 
 Test "hashtree"
   Type: custom (0.3)
@@ -24,9 +24,9 @@ Test "hashtree"
   WorkingDirectory: test
   TestTools: test
 
-Executable "benchmark-hashtree"
+Executable "benchmark-array-mapped-trie"
   Path: benchmark
   MainIs: main.ml
   Install: false
   CompiledObject: native
-  BuildDepends: hashtree, benchmark
+  BuildDepends: array-mapped-trie, benchmark
