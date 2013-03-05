@@ -9,7 +9,7 @@ BuildTools:  ocamlbuild
 
 Library "array-mapped-trie"
   Path:    lib
-  Modules: ArrayMappedTrie, ArrayMappedTrie_packed
+  Modules: ArrayMappedTrie, ArrayMappedTrie_packed, IntMap
 
 Executable test
   Path: test

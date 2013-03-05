@@ -6,31 +6,49 @@ open Benchmark
    - a Hashtbl
 *)
 
-module IntMap = Map.Make
+module MapMakeInt = Map.Make
   (struct type t = int
           let compare (x:int) (y:int) = Pervasives.compare x y end)
 
+module H = Hashtbl.Make (struct type t = int
+                                let equal (x:int) y = x = y
+                                let hash x = x land 0xffffffff end)
+
 (******************************************************************************)
+let mapmakeint_inserts n =
+  let rec loop map i =
+    if i = 0 then map
+    else loop (MapMakeInt.add i () map) (i-1)
+  in
+  ignore (loop MapMakeInt.empty n)
+
 let intmap_inserts n =
   let rec loop map i =
     if i = 0 then map
-    else loop (IntMap.add i () map) (i-1)
+    else loop (IntMap.BigEndian.add i () map) (i-1)
   in
-  ignore (loop IntMap.empty n)
+  ignore (loop IntMap.BigEndian.empty n)
+
+let intmap_le_inserts n =
+  let rec loop map i =
+    if i = 0 then map
+    else loop (IntMap.LittleEndian.add i () map) (i-1)
+  in
+  ignore (loop IntMap.LittleEndian.empty n)
 
 let hashtbl_inserts n =
-  let h = Hashtbl.create 1000 in
+  let h = H.create 1000 in
   let rec loop i =
     if i = 0 then ()
-    else (Hashtbl.replace h i (); loop (i-1))
+    else (H.replace h i (); loop (i-1))
   in
   loop n
 
 let hashtbl2_inserts n =
-  let h = Hashtbl.create 100000 in
+  let h = H.create 100000 in
   let rec loop i =
     if i = 0 then ()
-    else (Hashtbl.replace h i (); loop (i-1))
+    else (H.replace h i (); loop (i-1))
   in
   loop n
 
@@ -49,40 +67,66 @@ let amt_packed_inserts n =
   ignore (loop (ArrayMappedTrie_packed.create ()) n)
 
 (******************************************************************************)
-let intmap_inserts_lookups n =
+let mapmakeint_inserts_lookups n =
   let rec loop map i =
     if i = 0 then map
-    else loop (IntMap.add i () map) (i-1)
+    else loop (MapMakeInt.add i () map) (i-1)
   in
   let rec loop2 map i =
     if i = 0 then ()
     else
-      let () = IntMap.find i map in
+      let () = MapMakeInt.find i map in
       loop2 map (i-1)
   in
-  ignore (loop2 (loop IntMap.empty n) n)
+  ignore (loop2 (loop MapMakeInt.empty n) n)
+
+let intmap_inserts_lookups n =
+  let rec loop map i =
+    if i = 0 then map
+    else loop (IntMap.BigEndian.add i () map) (i-1)
+  in
+  let rec loop2 map i =
+    if i = 0 then ()
+    else
+      let () = IntMap.BigEndian.find i map in
+      loop2 map (i-1)
+  in
+  ignore (loop2 (loop IntMap.BigEndian.empty n) n)
+
+let intmap_le_inserts_lookups n =
+  let rec loop map i =
+    if i = 0 then map
+    else loop (IntMap.LittleEndian.add i () map) (i-1)
+  in
+  let rec loop2 map i =
+    if i = 0 then ()
+    else
+      let () = IntMap.LittleEndian.find i map in
+      loop2 map (i-1)
+  in
+  ignore (loop2 (loop IntMap.LittleEndian.empty n) n)
 
 let hashtbl_inserts_lookups n =
-  let h = Hashtbl.create 1000 in
+  let h = H.create 1000 in
   let rec loop i =
     if i = 0 then ()
-    else (Hashtbl.replace h i (); loop (i-1))
+    else (H.replace h i (); loop (i-1))
   in
   let rec loop2 i =
     if i = 0 then ()
-    else (Hashtbl.find h i; loop2 (i-1))
+    else (H.find h i; loop2 (i-1))
   in
   loop n; loop2 n
 
 let hashtbl2_inserts_lookups n =
-  let h = Hashtbl.create 100000 in
+  let h = H.create 100000 in
   let rec loop i =
     if i = 0 then ()
-    else (Hashtbl.replace h i (); loop (i-1))
+    else (H.replace h i (); loop (i-1))
   in
   let rec loop2 i =
     if i = 0 then ()
-    else (Hashtbl.find h i; loop2 (i-1))
+    else (H.find h i; loop2 (i-1))
   in
   loop n; loop2 n
 
@@ -116,6 +160,8 @@ let benchmark1 () =
       [ "arraymappedtrie", amt_inserts, 100000
       ; "arraymappedtrie_packed", amt_packed_inserts, 100000
       ; "intmap",   intmap_inserts,   100000
+      ; "intmap_le",   intmap_le_inserts,   100000
+      ; "mapmakeint",   mapmakeint_inserts,   100000
       ; "hashtbl",  hashtbl_inserts,  100000
       ; "hashtbl2", hashtbl2_inserts, 100000
       ]
@@ -129,6 +175,8 @@ let benchmark2 () =
       [ "arraymappedtrie", amt_inserts_lookups, 100000
       ; "arraymappedtrie_packed", amt_packed_inserts_lookups, 100000
       ; "intmap",   intmap_inserts_lookups,   100000
+      ; "intmap_le",   intmap_le_inserts_lookups,   100000
+      ; "mapmakeint",   mapmakeint_inserts_lookups,   100000
       ; "hashtbl",  hashtbl_inserts_lookups,  100000
       ; "hashtbl2", hashtbl2_inserts_lookups, 100000
       ]
