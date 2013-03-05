@@ -32,16 +32,16 @@ let find key {map;items} =
       raise Not_found
     else
       let offset = ctpop (map land (two_bottom5 - 1)) * 3 in
+      let mapkey = Obj.obj (Array.unsafe_get items (offset + 1)) in
       match Obj.obj (Array.unsafe_get items offset) with
         | 0 -> raise Not_found
-        | 1 when Obj.obj (Array.unsafe_get items (offset + 1)) = key ->
+        | 1 when mapkey = key ->
           Obj.obj (Array.unsafe_get items (offset + 2))
         | 1 ->
           raise Not_found
         | _ ->
-          let map  = Obj.obj (Array.unsafe_get items (offset + 1)) in
           let subt = Obj.obj (Array.unsafe_get items (offset + 2)) in
-          search (skey lsr 5) map subt
+          search (skey lsr 5) mapkey subt
   in
   search key map items
 
