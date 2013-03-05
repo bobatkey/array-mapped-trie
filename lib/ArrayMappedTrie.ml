@@ -95,8 +95,6 @@ let rec set_subtree key1 skey1 v1 key2 skey2 v2 ar i =
                 else
                   [| Value (key2, v2); Value (key1, v1) |]))
 
-external unsafe_blit : 'a array -> int -> 'a array -> int -> int -> unit = "caml_array_blit"
-
 let add key v {map;items} =
   let rec insertion d skey map t =
     let bottom5 = skey land 0x1f in
@@ -106,9 +104,9 @@ let add key v {map;items} =
       ; items =
           let l  = Array.length t in
           let t' = Array.make (l + 1) (Obj.magic 0) in
-          unsafe_blit t 0 t' 0 offset;
+          Array.blit t 0 t' 0 offset;
           Array.unsafe_set t' offset (Value (key, v));
-          unsafe_blit t offset t' (offset+1) (l - offset);
+          Array.blit t offset t' (offset+1) (l - offset);
           t'
       (*  Array.init (ctpop map + 1) begin fun i ->
             if i < offset then Array.unsafe_get t i

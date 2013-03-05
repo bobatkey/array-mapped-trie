@@ -68,8 +68,6 @@ let rec set_subtree key1 skey1 v1 key2 skey2 v2 ar i =
                 Obj.repr 1; Obj.repr key1; Obj.repr v1 |]))
   end
 
-external unsafe_blit : 'a array -> int -> 'a array -> int -> int -> unit = "caml_array_blit"
-
 (* FIXME: try a threshold (8?) for expanding the array to be the full 32*3 *)
 let add key v t =
   let rec insertion d skey obj parent_offset =
@@ -85,7 +83,7 @@ let add key v t =
         let j  = ref 0 in (* offset into original array *)
         for i = 0 to 31 do
           if map land (1 lsl i) <> 0 then begin
-            unsafe_blit t !j t' (i*3) 3;
+            Array.blit t !j t' (i*3) 3;
             j := !j + 3
           end
         done;
@@ -97,10 +95,10 @@ let add key v t =
         Obj.set_field obj (parent_offset+1) (Obj.repr t')
       end else begin
         let t' = Array.make (l + 3) (Obj.repr 1) in
-        unsafe_blit t 0 t' 0 offset;
+        Array.blit t 0 t' 0 offset;
         Array.unsafe_set t' (offset+1) (Obj.repr key);
         Array.unsafe_set t' (offset+2) (Obj.repr v);
-        unsafe_blit t offset t' (offset+3) (l - offset);
+        Array.blit t offset t' (offset+3) (l - offset);
         Obj.set_field obj parent_offset     (Obj.repr (map lor two_bottom5));
         Obj.set_field obj (parent_offset+1) (Obj.repr t')
       end
