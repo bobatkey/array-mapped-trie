@@ -6,6 +6,16 @@ open Benchmark
    - a Hashtbl
 *)
 
+let size = 50000
+
+let data_list =
+  let rec loop acc n =
+    if n = 0 then acc
+    else loop (Random.bits ()::acc) (n-1)
+  in
+  loop [] size
+
+(******************************************************************************)
 module MapMakeInt = Map.Make
   (struct type t = int
           let compare (x:int) (y:int) = Pervasives.compare x y end)
@@ -16,142 +26,60 @@ module H = Hashtbl.Make (struct type t = int
 
 (******************************************************************************)
 let mapmakeint_inserts n =
-  let rec loop map i =
-    if i = 0 then map
-    else loop (MapMakeInt.add i () map) (i-1)
-  in
-  ignore (loop MapMakeInt.empty n)
+  ignore (List.fold_left (fun m n -> MapMakeInt.add n () m) MapMakeInt.empty data_list)
 
 let intmap_inserts n =
-  let rec loop map i =
-    if i = 0 then map
-    else loop (IntMap.BigEndian.add i () map) (i-1)
-  in
-  ignore (loop IntMap.BigEndian.empty n)
+  ignore (List.fold_left (fun m n -> IntMap.BigEndian.add n () m) IntMap.BigEndian.empty data_list)
 
 let intmap_le_inserts n =
-  let rec loop map i =
-    if i = 0 then map
-    else loop (IntMap.LittleEndian.add i () map) (i-1)
-  in
-  ignore (loop IntMap.LittleEndian.empty n)
+  ignore (List.fold_left (fun m n -> IntMap.LittleEndian.add n () m) IntMap.LittleEndian.empty data_list)
 
 let hashtbl_inserts n =
   let h = H.create 1000 in
-  let rec loop i =
-    if i = 0 then ()
-    else (H.replace h i (); loop (i-1))
-  in
-  loop n
+  List.iter (fun i -> H.replace h i ()) data_list
 
 let hashtbl2_inserts n =
   let h = H.create 100000 in
-  let rec loop i =
-    if i = 0 then ()
-    else (H.replace h i (); loop (i-1))
-  in
-  loop n
+  List.iter (fun i -> H.replace h i ()) data_list
 
 let amt_inserts n =
-  let rec loop tree i =
-    if i = 0 then tree
-    else loop (ArrayMappedTrie.add i () tree) (i-1)
-  in
-  ignore (loop ArrayMappedTrie.empty n)
+  ignore (List.fold_left (fun m n -> ArrayMappedTrie.add n () m) ArrayMappedTrie.empty data_list)
 
 let amt_packed_inserts n =
-  let rec loop tree i =
-    if i = 0 then tree
-    else (ArrayMappedTrie_packed.add i () tree; loop tree (i-1))
-  in
-  ignore (loop (ArrayMappedTrie_packed.create ()) n)
+  let t = ArrayMappedTrie_packed.create () in
+  List.iter (fun i -> ArrayMappedTrie_packed.add i () t) data_list
 
 (******************************************************************************)
 let mapmakeint_inserts_lookups n =
-  let rec loop map i =
-    if i = 0 then map
-    else loop (MapMakeInt.add i () map) (i-1)
-  in
-  let rec loop2 map i =
-    if i = 0 then ()
-    else
-      let () = MapMakeInt.find i map in
-      loop2 map (i-1)
-  in
-  ignore (loop2 (loop MapMakeInt.empty n) n)
+  let t = List.fold_left (fun m n -> MapMakeInt.add n () m) MapMakeInt.empty data_list in
+  List.iter (fun i -> MapMakeInt.find i t) data_list
 
 let intmap_inserts_lookups n =
-  let rec loop map i =
-    if i = 0 then map
-    else loop (IntMap.BigEndian.add i () map) (i-1)
-  in
-  let rec loop2 map i =
-    if i = 0 then ()
-    else
-      let () = IntMap.BigEndian.find i map in
-      loop2 map (i-1)
-  in
-  ignore (loop2 (loop IntMap.BigEndian.empty n) n)
+  let t = List.fold_left (fun m n -> IntMap.BigEndian.add n () m) IntMap.BigEndian.empty data_list in
+  List.iter (fun i -> IntMap.BigEndian.find i t) data_list
 
 let intmap_le_inserts_lookups n =
-  let rec loop map i =
-    if i = 0 then map
-    else loop (IntMap.LittleEndian.add i () map) (i-1)
-  in
-  let rec loop2 map i =
-    if i = 0 then ()
-    else
-      let () = IntMap.LittleEndian.find i map in
-      loop2 map (i-1)
-  in
-  ignore (loop2 (loop IntMap.LittleEndian.empty n) n)
+  let t = List.fold_left (fun m n -> IntMap.LittleEndian.add n () m) IntMap.LittleEndian.empty data_list in
+  List.iter (fun i -> IntMap.LittleEndian.find i t) data_list
 
 let hashtbl_inserts_lookups n =
   let h = H.create 1000 in
-  let rec loop i =
-    if i = 0 then ()
-    else (H.replace h i (); loop (i-1))
-  in
-  let rec loop2 i =
-    if i = 0 then ()
-    else (H.find h i; loop2 (i-1))
-  in
-  loop n; loop2 n
+  List.iter (fun i -> H.replace h i ()) data_list;
+  List.iter (fun i -> H.find h i) data_list
 
 let hashtbl2_inserts_lookups n =
   let h = H.create 100000 in
-  let rec loop i =
-    if i = 0 then ()
-    else (H.replace h i (); loop (i-1))
-  in
-  let rec loop2 i =
-    if i = 0 then ()
-    else (H.find h i; loop2 (i-1))
-  in
-  loop n; loop2 n
+  List.iter (fun i -> H.replace h i ()) data_list;
+  List.iter (fun i -> H.find h i) data_list
 
 let amt_inserts_lookups n =
-  let rec loop tree i =
-    if i = 0 then tree
-    else loop (ArrayMappedTrie.add i () tree) (i-1)
-  in
-  let rec loop2 tree i =
-    if i = 0 then ()
-    else let _ = ArrayMappedTrie.find i tree in loop2 tree (i-1)
-  in
-  loop2 (loop ArrayMappedTrie.empty n) n
+  let t = List.fold_left (fun m n -> ArrayMappedTrie.add n () m) ArrayMappedTrie.empty data_list in
+  List.iter (fun i -> ArrayMappedTrie.find i t) data_list
 
 let amt_packed_inserts_lookups n =
-  let rec loop tree i =
-    if i = 0 then tree
-    else (ArrayMappedTrie_packed.add i () tree; loop tree (i-1))
-  in
-  let rec loop2 tree i =
-    if i = 0 then ()
-    else let _ = ArrayMappedTrie_packed.find i tree in loop2 tree (i-1)
-  in
-  loop2 (loop (ArrayMappedTrie_packed.create ()) n) n
-
+  let t = ArrayMappedTrie_packed.create () in
+  List.iter (fun i -> ArrayMappedTrie_packed.add i () t) data_list;
+  List.iter (fun i -> ArrayMappedTrie_packed.find i t) data_list
 
 (******************************************************************************)
 let benchmark1 () =
@@ -185,6 +113,7 @@ let benchmark2 () =
   tabulate res
 
 let _ =
+  Random.init 12345;
 (*  Gc.set { (Gc.get ()) with Gc.minor_heap_size = 262144 * 20 };*)
   benchmark1 ();
   print_newline ();
