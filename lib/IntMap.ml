@@ -98,7 +98,7 @@ module BigEndian : S = struct
     let x' = x land (lnot (guess-1)) in
     let rec high_bit x =
       let m = lowest_bit x in
-      if x = m then m else high_bit (x-guess)
+      if x = m then m else high_bit (x-m)
     in
     high_bit x'
 
