@@ -115,7 +115,7 @@ let add key v {map;items} =
           end*)
       }
     else
-      let t' = (*Array.copy*) t in
+      let t' = Array.copy t in
       begin
         match Array.unsafe_get t' offset with
           | Value (key', v') when key = key' ->
